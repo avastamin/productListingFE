@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import Products from "./Components/Products";
 import * as ProductsAPI from "./ProductsAPI";
 import { debounce, classNames } from "./utils/helpers";
+import DualRangeSlider from "./Components/DualRangeSlider";
+import PriceRangeSlider from "./Components/PriceRangeSlider";
+import PriceRangeInput from "./Components/PriceRangeInput";
 import {
   Dialog,
   DialogBackdrop,
@@ -71,29 +74,23 @@ const filters = [
   },
 ];
 
-const navigation = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
-  { name: "Projects", href: "#", icon: FolderIcon, current: false },
-  { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-  { name: "Documents", href: "#", icon: DocumentDuplicateIcon, current: false },
-  { name: "Reports", href: "#", icon: ChartPieIcon, current: false },
-];
-const teams = [
-  { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-  { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-  { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
-];
-const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
-
 function App() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [query, setQuery] = useState<string>("");
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(1000);
+
+  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.min(Number(e.target.value), maxPrice);
+    setMinPrice(value);
+  };
+
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.max(Number(e.target.value), minPrice);
+    setMaxPrice(value);
+  };
 
   useEffect(() => {
     ProductsAPI.getAll().then((products) => {
@@ -102,10 +99,18 @@ function App() {
     });
   }, []);
 
-  const fetchResults = async (searchTerm: string) => {
-    if (searchTerm) {
+  const fetchResults = async (
+    searchTerm: string,
+    minPrice?: number,
+    maxPrice?: number
+  ) => {
+    if (searchTerm || minPrice || maxPrice) {
       try {
-        const data = await ProductsAPI.searchProducts(searchTerm);
+        const data = await ProductsAPI.searchAndFilterProducts(
+          searchTerm,
+          minPrice,
+          maxPrice
+        );
         console.log("response:", data);
 
         setProducts(data);
@@ -119,8 +124,9 @@ function App() {
   const debouncedFetchResults = debounce(fetchResults, 300);
 
   useEffect(() => {
-    debouncedFetchResults(query);
-  }, [query]);
+    console.log("minPrice, maxPrice", minPrice, maxPrice);
+    debouncedFetchResults(query, minPrice, maxPrice);
+  }, [query, minPrice, maxPrice]);
 
   return (
     <div className="w-full bg-red-300">
@@ -180,6 +186,14 @@ function App() {
                     className="ml-1 h-5 w-5 flex-shrink-0 text-gray-400"
                   />
                 </button>
+                <div className="bg-white flex items-center justify-center">
+                  <PriceRangeInput
+                    minPrice={minPrice}
+                    maxPrice={maxPrice}
+                    handleMinChange={handleMinChange}
+                    handleMaxChange={handleMaxChange}
+                  />
+                </div>
 
                 <div className="hidden lg:block">
                   <form className="space-y-10 divide-y divide-gray-200">

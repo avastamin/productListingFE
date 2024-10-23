@@ -13,7 +13,7 @@ export default function Products({ products }: any) {
                   <div className="relative h-72 w-full overflow-hidden rounded-lg">
                     <img
                       alt={product.name}
-                      src={product.img}
+                      src={product.imageSrc}
                       className="h-full w-full object-cover object-center"
                     />
                   </div>

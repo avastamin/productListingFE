@@ -14,18 +14,16 @@ export const getAll = () =>
     .then((res) => res.json())
     .then((data) => data.results);
 
-export const searchProducts = async (query: string) =>
-  fetch(`${api}/products/search?term=${query}`, { headers })
+export const searchAndFilterProducts = async (
+  query: string,
+  minPrice?: number,
+  maxPrice?: number
+) =>
+  fetch(
+    `${api}/products/filter?term=${query}&minPrice=${minPrice}&maxPrice=${maxPrice}`,
+    {
+      headers,
+    }
+  )
     .then((res) => res.json())
     .then((data) => data.results);
-
-/*   fetch(`${api}/products/search`, {
-    method: "GET",
-    headers: {
-      ...headers,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ term: query, maxResults }),
-  })
-    .then((res) => res.json())
-    .then((data) => data); */
