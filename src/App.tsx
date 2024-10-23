@@ -128,7 +128,11 @@ function App() {
                 <div className="flex justify-center">
                   {isLoading && <LoadingCircle />}
                 </div>
-                <Products products={products} />
+                {products && products.length > 0 ? (
+                  <Products products={products} />
+                ) : (
+                  <div className="flex justify-center">No Items found</div>
+                )}
               </div>
             </div>
           </main>
