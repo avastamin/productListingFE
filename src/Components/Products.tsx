@@ -3,7 +3,7 @@ import { Product } from "../utils/types";
 export default function Products({ products }: { products: Product[] }) {
   return (
     <div className="bg-white">
-      <div className="mx-auto max-w-2xl px-4 py-1lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl px-4 py-1 lg:max-w-7xl lg:px-8">
         <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-3 sm:gap-x-6">
           {products &&
             products.map((product) => (

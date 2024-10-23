@@ -72,7 +72,7 @@ function App() {
   }, [query, minPrice, maxPrice, rating]);
 
   return (
-    <div className="w-full bg-red-300">
+    <div className="w-full bg-red-300 h-full">
       <div className="bg-white mx-auto max-w-6xl">
         <div className="">
           <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
@@ -102,9 +102,9 @@ function App() {
               </form>
             </div>
           </div>
-          <main className="mx-auto px-4 py-6 sm:px-6 lg:max-w-7xl lg:px-8">
-            <div className="pt-12 lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
-              <aside>
+          <main className="mx-auto px-4 py-0 sm:px-6 lg:max-w-7xl lg:px-8">
+            <div className="lg:grid lg:grid-cols-3 lg:gap-x-8 xl:grid-cols-4">
+              <aside className="border-r pr-2">
                 <h2 className="sr-only">Filters</h2>
                 <div className="bg-white flex items-center justify-center">
                   <PriceRangeInput
@@ -114,17 +114,22 @@ function App() {
                     handleMaxChange={handleMaxChange}
                   />
                 </div>
-                <div className="flex justify-center align-middle items-center">
-                  <StarRatingInput
-                    handleMouseEnter={handleMouseEnter}
-                    handleClick={handleClick}
-                    rating={rating}
-                  />
-                  <span className="text-xs font-bold">& Up</span>
+                <div className="flex items-center flex-col">
+                  <h2 className="text-base mb-2 font-semibold">
+                    Filter by ratings
+                  </h2>
+                  <div className="flex justify-center align-middle items-center">
+                    <StarRatingInput
+                      handleMouseEnter={handleMouseEnter}
+                      handleClick={handleClick}
+                      rating={rating}
+                    />
+                    <span className="text-xs font-bold">& Up</span>
+                  </div>
                 </div>
               </aside>
 
-              <div className="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
+              <div className="mt-6 pt-1 lg:col-span-2 lg:mt-0 xl:col-span-3">
                 <div className="flex justify-center">
                   {isLoading && <LoadingCircle />}
                 </div>
