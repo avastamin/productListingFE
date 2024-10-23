@@ -5,10 +5,11 @@ import { debounce } from "./utils/helpers";
 
 import PriceRangeInput from "./Components/PriceRangeInput";
 import StarRatingInput from "./Components/StarRatingInput";
-
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { LoadingCircle } from "./Components/LoadingCircle";
 
 function App() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [products, setProducts] = useState([]);
   const [query, setQuery] = useState<string>("");
   const [minPrice, setMinPrice] = useState<number>(0);
@@ -33,9 +34,10 @@ function App() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     ProductsAPI.getAll().then((products) => {
-      console.log("ProductsAPI", products);
       setProducts(products);
+      setIsLoading(false);
     });
   }, []);
 
@@ -45,6 +47,7 @@ function App() {
     maxPrice?: number
   ) => {
     if (searchTerm || minPrice || maxPrice) {
+      setIsLoading(true);
       try {
         const data = await ProductsAPI.searchAndFilterProducts(
           searchTerm,
@@ -52,10 +55,10 @@ function App() {
           maxPrice,
           rating
         );
-        console.log("response:", data);
-
         setProducts(data);
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         console.error("Error fetching results:", error);
         setProducts([]);
       }
@@ -65,7 +68,6 @@ function App() {
   const debouncedFetchResults = debounce(fetchResults, 300);
 
   useEffect(() => {
-    console.log("minPrice, maxPrice", minPrice, maxPrice);
     debouncedFetchResults(query, minPrice, maxPrice);
   }, [query, minPrice, maxPrice, rating]);
 
@@ -123,6 +125,9 @@ function App() {
               </aside>
 
               <div className="mt-6 lg:col-span-2 lg:mt-0 xl:col-span-3">
+                <div className="flex justify-center">
+                  {isLoading && <LoadingCircle />}
+                </div>
                 <Products products={products} />
               </div>
             </div>
