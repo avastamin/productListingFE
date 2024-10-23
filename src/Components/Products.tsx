@@ -1,5 +1,6 @@
 import StarRating from "../Components/StarRating";
-export default function Products({ products }: any) {
+import { Product } from "../utils/types";
+export default function Products({ products }: { products: Product[] }) {
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-1lg:max-w-7xl lg:px-8">

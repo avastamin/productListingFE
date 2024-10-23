@@ -17,10 +17,11 @@ export const getAll = () =>
 export const searchAndFilterProducts = async (
   query: string,
   minPrice?: number,
-  maxPrice?: number
+  maxPrice?: number,
+  rating?: number
 ) =>
   fetch(
-    `${api}/products/filter?term=${query}&minPrice=${minPrice}&maxPrice=${maxPrice}`,
+    `${api}/products/filter?term=${query}&minPrice=${minPrice}&maxPrice=${maxPrice}&rating=${rating}`,
     {
       headers,
     }
