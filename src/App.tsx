@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Products from "./Components/Products";
 import * as ProductsAPI from "./ProductsAPI";
+import { debounce, classNames } from "./utils/helpers";
 import {
   Dialog,
   DialogBackdrop,
@@ -46,13 +47,10 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [products, setProducts] = useState([]);
+  const [query, setQuery] = useState<string>("");
 
   useEffect(() => {
     ProductsAPI.getAll().then((products) => {
@@ -60,6 +58,27 @@ function App() {
       setProducts(products);
     });
   }, []);
+
+  const fetchResults = async (searchTerm: string) => {
+    if (searchTerm) {
+      try {
+        const data = await ProductsAPI.searchProducts(searchTerm);
+        console.log("response:", data);
+
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching results:", error);
+        setProducts([]);
+      }
+    }
+  };
+
+  const debouncedFetchResults = debounce(fetchResults, 300);
+
+  useEffect(() => {
+    debouncedFetchResults(query);
+  }, [query]);
+
   return (
     <>
       <div>
@@ -279,6 +298,7 @@ function App() {
                   id="search-field"
                   name="search"
                   type="search"
+                  onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search..."
                   className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
                 />

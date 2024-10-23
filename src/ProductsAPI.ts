@@ -13,3 +13,19 @@ export const getAll = () =>
   fetch(`${api}/products`, { headers })
     .then((res) => res.json())
     .then((data) => data.results);
+
+export const searchProducts = async (query: string) =>
+  fetch(`${api}/products/search?term=${query}`, { headers })
+    .then((res) => res.json())
+    .then((data) => data.results);
+
+/*   fetch(`${api}/products/search`, {
+    method: "GET",
+    headers: {
+      ...headers,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ term: query, maxResults }),
+  })
+    .then((res) => res.json())
+    .then((data) => data); */
