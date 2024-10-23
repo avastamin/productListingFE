@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import Products from "./Components/Products";
 import * as ProductsAPI from "./ProductsAPI";
 import { debounce, classNames } from "./utils/helpers";
-import DualRangeSlider from "./Components/DualRangeSlider";
-import PriceRangeSlider from "./Components/PriceRangeSlider";
+
 import PriceRangeInput from "./Components/PriceRangeInput";
+import StarRating from "./Components/StarRating";
 import {
   Dialog,
   DialogBackdrop,
@@ -194,7 +194,7 @@ function App() {
                     handleMaxChange={handleMaxChange}
                   />
                 </div>
-
+                <StarRating />
                 <div className="hidden lg:block">
                   <form className="space-y-10 divide-y divide-gray-200">
                     {filters.map((section, sectionIdx) => (
